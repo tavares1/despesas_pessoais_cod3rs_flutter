@@ -17,6 +17,7 @@ class ExpensesApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
           accentColor: Colors.yellow,
+          errorColor: Colors.red,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
@@ -38,36 +39,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-        id: 't0',
-        title: "Conta antiga",
-        value: 400.00,
-        date: DateTime.now().subtract(Duration(days: 33))),
-    Transaction(
-        id: 't1',
-        title: "Novo Tênis de Corrida",
-        value: 310.40,
-        date: DateTime.now().subtract(Duration(days: 3))),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 220.30,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de forno',
-      value: 100.00,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de luz',
-      value: 50.00,
-      date: DateTime.now().subtract(Duration(days: 4)),
-    )
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTransactions {
     return _transactions
@@ -85,18 +57,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime dateTime) {
     final newTransaction = Transaction(
-        id: 't${this._transactions.length}',
-        title: title,
-        value: value,
-        date: DateTime.now());
+      id: 't${this._transactions.length}',
+      title: title,
+      value: value,
+      date: dateTime,
+    );
 
     setState(() {
       _transactions.add(newTransaction);
     });
 
     Navigator.of(context).pop();
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
+    });
   }
 
   @override
@@ -115,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Chart(_recentTransactions),
           Column(children: <Widget>[
-            TransactionList(_transactions),
+            TransactionList(_transactions, _deleteTransaction),
           ])
         ],
       ),

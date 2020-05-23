@@ -42,7 +42,7 @@ class Chart extends StatelessWidget {
             children: groupedTransactions.map((e) {
               String label = e['day'];
               double value = e['value'];
-              double percentage = value / _weekTotalValue;
+              double percentage = value == 0 ? 0 : value / _weekTotalValue;
               return Flexible(
                 fit: FlexFit.tight,
                 child: ChartBar(
