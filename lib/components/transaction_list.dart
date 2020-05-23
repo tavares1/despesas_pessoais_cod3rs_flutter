@@ -1,56 +1,66 @@
-import 'package:despesas_pessoais/models/Transactions.dart';
+import 'package:despesas_pessoais/models/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
-  TransactionList({@required this.transactions});
+  TransactionList(this.transactions);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      child: ListView.builder(
-          itemCount: transactions.length,
-          itemBuilder: (ctx, index) {
-            final tr = transactions[index];
-            return Card(
-                child: Row(
+      child: this.transactions.isEmpty
+          ? Column(
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                    color: Colors.purple,
-                    width: 2,
-                  )),
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "R\$ ${tr.value.toStringAsFixed(2)}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.purple),
-                  ),
+                SizedBox(
+                  height: 20,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      tr.title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      DateFormat('d MMM y').format(tr.date),
-                      style: TextStyle(color: Colors.grey),
-                    )
-                  ],
+                Text('Nenhum transação cadastrada',
+                    style: Theme.of(context).textTheme.headline6),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
                 )
               ],
-            ));
-          }),
+            )
+          : ListView.builder(
+              itemCount: transactions.length,
+              itemBuilder: (ctx, index) {
+                final tr = transactions[index];
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: FittedBox(
+                          child: Text('R\$${tr.value}'),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      tr.title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat('d MMM y').format(tr.date),
+                    ),
+                  ),
+                );
+              }),
     );
   }
 }
